@@ -1,0 +1,13 @@
+{
+  "name": "KitConnect",
+  "short_name": "KitConnect",
+  "description": "Bilingual, offline LEGO STEM build guides for kids",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8EB",
+  "theme_color": "#17324D",
+  "icons": [
+    { "src": "/kitconnect-icon.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "/kitconnect-icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
