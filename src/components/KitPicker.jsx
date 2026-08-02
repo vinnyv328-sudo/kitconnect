@@ -1,9 +1,13 @@
 import { ArrowLeft, ChevronRight, Wand2, Lock } from "lucide-react";
 import { words } from "@/lib/kitContent";
-import FrogThumbnail from "@/components/thumbnails/FrogThumbnail";
-import MiloThumbnail from "@/components/thumbnails/MiloThumbnail";
+import FlowerThumbnail from "@/components/thumbnails/FlowerThumbnail";
 
-const thumbnails = { frog: FrogThumbnail, milo: MiloThumbnail };
+// PDF cover pages for each kit (page 1 = cover image from official PDF)
+const kitPdfCovers = {
+  frog: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/84a6796fa_FROG.pdf", page: 1 },
+  milo: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/9e8c0065e_MILO.pdf", page: 1 },
+  flower: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/0a5c538e7_Flower.pdf", page: 1 },
+};
 
 export default function KitPicker({ language, kits, onChoose, onAICreate, onBack }) {
   const t = words[language];
@@ -32,11 +36,19 @@ export default function KitPicker({ language, kits, onChoose, onAICreate, onBack
           </h2>
           <div className="grid gap-6 sm:grid-cols-2">
             {wedoKits.map(kit => {
-              const Thumb = thumbnails[kit.id];
+              const cover = kitPdfCovers[kit.id];
               return (
                 <button key={kit.id} onClick={() => onChoose(kit)} className="group overflow-hidden rounded-[2rem] border-4 border-white/40 bg-white text-left shadow-xl transition hover:-translate-y-1">
-                  <div className="grid aspect-[4/3] w-full place-items-center bg-gradient-to-br from-purple-100 to-rose-100 p-6">
-                    {Thumb ? <Thumb className="h-full w-full drop-shadow-lg" /> : null}
+                  <div className="relative flex aspect-[3/4] w-full items-center justify-center overflow-hidden bg-white">
+                    {cover ? (
+                      <iframe
+                        src={`${cover.url}#page=${cover.page}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
+                        className="h-full w-full border-0 pointer-events-none"
+                        title={kit.model[language]}
+                      />
+                    ) : kit.id === "flower" ? (
+                      <FlowerThumbnail className="h-full w-full p-4 drop-shadow-lg" />
+                    ) : null}
                   </div>
                   <span className="flex items-center gap-4 p-5">
                     <span className="min-w-0 flex-1">

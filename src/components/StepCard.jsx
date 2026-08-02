@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, LifeBuoy, Volume2, Square } from "lucide-react";
 import { words } from "@/lib/kitContent";
 import AttachmentOverlay from "@/components/AttachmentOverlay";
 import PartsCallout from "@/components/PartsCallout";
+import FullscreenViewer from "@/components/FullscreenViewer";
 
 export default function StepCard({ step, index, total, language, color, pdfUrl, onHelp, onNext, onPrevious }) {
   const t = words[language];
@@ -43,6 +44,7 @@ export default function StepCard({ step, index, total, language, color, pdfUrl, 
     <PartsCallout parts={step.parts} language={language} color={color} />
     {step.pdfPage && pdfUrl ? (
       <div className="relative w-full overflow-hidden rounded-2xl bg-white" style={{ height: '400px' }}>
+        <FullscreenViewer pdfUrl={pdfUrl} pdfPage={step.pdfPage} title={step.caption[language]} language={language} />
         <iframe
           src={`${pdfUrl}#page=${step.pdfPage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
           className="w-full h-full border-0 rounded-2xl"
@@ -52,6 +54,7 @@ export default function StepCard({ step, index, total, language, color, pdfUrl, 
       </div>
     ) : step.image ? (
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-slate-50">
+        <FullscreenViewer image={step.image} title={step.caption[language]} language={language} />
         <img src={step.image} alt={step.caption[language]} className="h-full w-full object-contain" />
         <AttachmentOverlay points={step.attach} color={color} language={language} />
       </div>
