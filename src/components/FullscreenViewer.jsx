@@ -26,11 +26,16 @@ export default function FullscreenViewer({ pdfUrl, pdfPage, image, title, langua
           </button>
           <div className="flex flex-1 items-center justify-center p-2 sm:p-6" onClick={e => e.stopPropagation()}>
             {pdfUrl && pdfPage ? (
-              <iframe
-                src={`${pdfUrl}#page=${pdfPage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-                className="h-full w-full max-w-4xl rounded-2xl border-0 bg-white"
-                title={title}
-              />
+              <div className="relative aspect-[3/4] h-full max-w-full overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <iframe
+                  src={`${pdfUrl}#page=${pdfPage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
+                  className="h-full w-full border-0"
+                  scrolling="no"
+                  style={{ touchAction: 'none', overflow: 'hidden' }}
+                  title={title}
+                />
+                <div className="pointer-events-none absolute inset-0" />
+              </div>
             ) : image ? (
               <img src={image} alt={title} className="h-full w-full max-w-4xl rounded-2xl object-contain" />
             ) : null}

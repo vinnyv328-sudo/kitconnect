@@ -48,8 +48,11 @@ export default function StepCard({ step, index, total, language, color, pdfUrl, 
         <iframe
           src={`${pdfUrl}#page=${step.pdfPage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
           className="w-full h-full border-0 rounded-2xl"
+          scrolling="no"
+          style={{ touchAction: 'none', overflow: 'hidden' }}
           title={step.caption[language]}
         />
+        <div className="pointer-events-none absolute inset-0" />
         <AttachmentOverlay points={step.attach} color={color} language={language} />
       </div>
     ) : step.image ? (

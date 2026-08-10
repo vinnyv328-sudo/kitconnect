@@ -4,9 +4,16 @@ import FlowerThumbnail from "@/components/thumbnails/FlowerThumbnail";
 
 // PDF cover pages for each kit (page 1 = cover image from official PDF)
 const kitPdfCovers = {
-  frog: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/84a6796fa_FROG.pdf", page: 1 },
-  milo: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/9e8c0065e_MILO.pdf", page: 1 },
-  flower: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/0a5c538e7_Flower.pdf", page: 1 },
+  frog: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/84a6796fa_FROG.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/f41e4b630_Screenshot2026-08-04at43518PM.png" },
+  milo: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/9e8c0065e_MILO.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/8147b05c9_MILO.png" },
+  flower: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/0a5c538e7_Flower.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/0fa40d952_Flower.png" },
+  helicopter: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/3494b9c36_Helicopter_compressed.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/a90769fb0_Helicopter.png" },
+  pulling: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/a44ba99f6_Pulling.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/b1aeac276_PULLING.png" },
+  racecar: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/174cbe326_RaceCar.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/47f436bdb_RACECAR.png" },
+  recyclingtruck: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/2e13d78f9_RecyclingTruck.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/6016800a8_RECYCLINGTRUCK.png" },
+  drivingbase1: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/a84da106a_Driving_Base_1.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/918fd3180_DRIVINGBASESPIKE.png" },
+  hopper: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/b30483e86_Hopper_compressed.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/40f4ab1cf_HOPPERSPIKE.png" },
+  rhino: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/bb6c06960_Rhino_compressed.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/b7040d1ac_Screenshot2026-08-09at41242PM.png", maskTopLeft: true },
 };
 
 export default function KitPicker({ language, kits, onChoose, onAICreate, onBack }) {
@@ -38,17 +45,25 @@ export default function KitPicker({ language, kits, onChoose, onAICreate, onBack
             {wedoKits.map(kit => {
               const cover = kitPdfCovers[kit.id];
               return (
-                <button key={kit.id} onClick={() => onChoose(kit)} className="group overflow-hidden rounded-[2rem] border-4 border-white/40 bg-white text-left shadow-xl transition hover:-translate-y-1">
-                  <div className="relative flex aspect-[3/4] w-full items-center justify-center overflow-hidden bg-white">
-                    {cover ? (
-                      <iframe
-                        src={`${cover.url}#page=${cover.page}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-                        className="h-full w-full border-0 pointer-events-none"
-                        title={kit.model[language]}
-                      />
+                <button key={kit.id} onClick={() => onChoose(kit)} className="group overflow-hidden rounded-[2rem] bg-white text-left shadow-xl transition hover:-translate-y-1">
+                  <div className={`relative flex w-full items-center justify-center overflow-hidden bg-white ${cover?.image ? 'aspect-[1306/896]' : 'aspect-[3/4]'}`}>
+                    {cover?.image ? (
+                      <img src={cover.image} alt={kit.model[language]} className="h-full w-full object-cover" />
+                    ) : cover ? (
+                      <>
+                        <iframe
+                          src={`${cover.url}#page=${cover.page}&toolbar=0&navpanes=0&scrollbar=0&view=FitV`}
+                          className="h-full w-full border-0"
+                          scrolling="no"
+                          style={{ touchAction: 'none', overflow: 'hidden' }}
+                          title={kit.model[language]}
+                        />
+                        <div className="absolute inset-0 bg-transparent" />
+                      </>
                     ) : kit.id === "flower" ? (
                       <FlowerThumbnail className="h-full w-full p-4 drop-shadow-lg" />
                     ) : null}
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
                   </div>
                   <span className="flex items-center gap-4 p-5">
                     <span className="min-w-0 flex-1">
@@ -69,6 +84,38 @@ export default function KitPicker({ language, kits, onChoose, onAICreate, onBack
             <span className="h-3 w-3 rounded-full bg-sky-300" />{t.spikeSection}
           </h2>
           <div className="grid gap-6 sm:grid-cols-2">
+            {kits.filter(k => k.category === "spike").map(kit => {
+              const cover = kitPdfCovers[kit.id];
+              return (
+                <button key={kit.id} onClick={() => onChoose(kit)} className="group overflow-hidden rounded-[2rem] bg-white text-left shadow-xl transition hover:-translate-y-1">
+                  <div className={`relative flex w-full items-center justify-center overflow-hidden bg-white ${cover?.image ? 'aspect-[1306/896]' : 'aspect-[3/4]'}`}>
+                    {cover?.image ? (
+                      <img src={cover.image} alt={kit.model[language]} className="h-full w-full object-cover" />
+                    ) : cover ? (
+                      <>
+                        <iframe
+                          src={`${cover.url}#page=${cover.page}&toolbar=0&navpanes=0&scrollbar=0&view=FitV`}
+                          className="h-full w-full border-0"
+                          scrolling="no"
+                          style={{ touchAction: 'none', overflow: 'hidden' }}
+                          title={kit.model[language]}
+                        />
+                        <div className="absolute inset-0 bg-transparent" />
+                      </>
+                    ) : null}
+                    {cover?.maskTopLeft && <div className="pointer-events-none absolute left-0 top-0 h-16 w-16 bg-white" />}
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
+                  </div>
+                  <span className="flex items-center gap-4 p-5">
+                    <span className="min-w-0 flex-1">
+                      <small className="block font-bold text-slate-500">{kit.name}</small>
+                      <strong className="block truncate text-2xl text-[#17324D]">{kit.model[language]}</strong>
+                    </span>
+                    <ChevronRight size={36} className="shrink-0 text-purple-500" />
+                  </span>
+                </button>
+              );
+            })}
             <div className="flex flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-dashed border-white/40 bg-white/10 p-10 text-center backdrop-blur-md">
               <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/20 text-white"><Lock size={32} /></span>
               <strong className="text-xl text-white">{t.comingSoon}</strong>
