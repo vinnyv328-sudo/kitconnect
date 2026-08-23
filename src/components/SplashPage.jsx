@@ -29,7 +29,7 @@ export default function SplashPage({ onDone }) {
           className="drop-shadow-2xl"
         >
           <Image
-            src="https://media.base44.com/images/public/6a5d71598673d49d12916a74/83de87f6c_generated_image.png"
+            src="/work-in-progress.svg"
             alt="Kit Connect logo"
             fittingType="fit"
             className="h-40 w-40 rounded-3xl bg-white/90 object-contain shadow-2xl sm:h-48 sm:w-48"

@@ -1,7 +1,20 @@
 import { useState } from "react";
 import { LifeBuoy, X, MessageCircle, Send, Loader2 } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 import { words } from "@/lib/kitContent";
+
+const askAiHelper = async (prompt, language) => {
+  const response = await fetch('/api/ai/help', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt, language }),
+  });
+
+  if (!response.ok) {
+    throw new Error('AI help request failed');
+  }
+
+  return response.json();
+};
 
 export default function HelpPanel({ language, text, step, kitName, onClose }) {
   const t = words[language];
@@ -16,21 +29,8 @@ export default function HelpPanel({ language, text, step, kitName, onClose }) {
     try {
       const partsList = (step?.parts || []).map(p => `${p.count} ${p[language]}`).join(", ");
       const context = `Kit: ${kitName}\nStep: ${step?.caption?.[language] || ""}\nParts: ${partsList}\nInstructions: ${text}`;
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a friendly, patient LEGO build helper for children ages 6-10. A child is building a LEGO model and is stuck on a step. 
-
-Answer their question in simple, encouraging words in ${language === "es" ? "Spanish" : "English"}. 
-- Use short sentences and simple words a child can understand.
-- Be warm, positive, and encouraging.
-- If the child asks about a specific piece, describe what it looks like (color, shape, size).
-- Keep your answer to 2-3 sentences maximum.
-
-Context about the current step:
-${context}
-
-Child's question: ${question}`
-      });
-      setAnswer(typeof result === "string" ? result : String(result));
+      const result = await askAiHelper(`You are a friendly, patient LEGO build helper for children ages 6-10. A child is building a LEGO model and is stuck on a step.\n\nAnswer their question in simple, encouraging words in ${language === "es" ? "Spanish" : "English"}.\n- Use short sentences and simple words a child can understand.\n- Be warm, positive, and encouraging.\n- If the child asks about a specific piece, describe what it looks like (color, shape, size).\n- Keep your answer to 2-3 sentences maximum.\n\nContext about the current step:\n${context}\n\nChild's question: ${question}`, language);
+      setAnswer(typeof result?.answer === "string" ? result.answer : String(result ?? ""));
     } catch {
       setAnswer(language === "es" ? "Lo siento, no pude responder ahora. ¡Intenta de nuevo!" : "Sorry, I couldn't answer right now. Try again!");
     }

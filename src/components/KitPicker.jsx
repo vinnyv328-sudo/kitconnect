@@ -2,18 +2,20 @@ import { ArrowLeft, ChevronRight, Wand2, Lock } from "lucide-react";
 import { words } from "@/lib/kitContent";
 import FlowerThumbnail from "@/components/thumbnails/FlowerThumbnail";
 
-// PDF cover pages for each kit (page 1 = cover image from official PDF)
+const workInProgressImage = "/work-in-progress.svg";
+
+// Restore working thumbnails for the kits that still have valid cover assets.
 const kitPdfCovers = {
-  frog: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/84a6796fa_FROG.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/f41e4b630_Screenshot2026-08-04at43518PM.png" },
-  milo: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/9e8c0065e_MILO.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/8147b05c9_MILO.png" },
-  flower: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/0a5c538e7_Flower.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/0fa40d952_Flower.png" },
-  helicopter: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/3494b9c36_Helicopter_compressed.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/a90769fb0_Helicopter.png" },
-  pulling: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/a44ba99f6_Pulling.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/b1aeac276_PULLING.png" },
-  racecar: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/174cbe326_RaceCar.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/47f436bdb_RACECAR.png" },
-  recyclingtruck: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/2e13d78f9_RecyclingTruck.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/6016800a8_RECYCLINGTRUCK.png" },
-  drivingbase1: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/a84da106a_Driving_Base_1.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/918fd3180_DRIVINGBASESPIKE.png" },
-  hopper: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/b30483e86_Hopper_compressed.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/40f4ab1cf_HOPPERSPIKE.png" },
-  rhino: { url: "https://media.base44.com/files/public/6a5d71598673d49d12916a74/bb6c06960_Rhino_compressed.pdf", page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/b7040d1ac_Screenshot2026-08-09at41242PM.png", maskTopLeft: true },
+  frog: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/f41e4b630_Screenshot2026-08-04at43518PM.png" },
+  milo: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/8147b05c9_MILO.png" },
+  flower: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/0fa40d952_Flower.png" },
+  helicopter: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  pulling: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  racecar: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  recyclingtruck: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  drivingbase1: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  hopper: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  rhino: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/b7040d1ac_Screenshot2026-08-09at41242PM.png", maskTopLeft: true },
 };
 
 export default function KitPicker({ language, kits, onChoose, onAICreate, onBack }) {

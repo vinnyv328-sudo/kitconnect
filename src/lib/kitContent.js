@@ -1,10 +1,15 @@
 // Kit content, LEGO Education WeDo 2.0 Set 45300
-import { pullingRobotKit } from '@/lib/kitData/pullingRobot';
-import { raceCarKit } from '@/lib/kitData/raceCar';
-import { recyclingTruckKit } from '@/lib/kitData/recyclingTruck';
-import { drivingBase1Kit } from '@/lib/kitData/drivingBase1';
-import { hopperKit } from '@/lib/kitData/hopper';
-import { rhinoKit } from '@/lib/kitData/rhino';
+const availableKitModules = Object.values(
+  import.meta.glob('@/lib/kitData/*.js', { eager: true })
+).flatMap((module) =>
+  Object.values(module).filter(
+    (candidate) =>
+      candidate &&
+      typeof candidate === 'object' &&
+      'id' in candidate &&
+      Array.isArray(candidate.steps)
+  )
+);
 
 export const kits = [
   {
@@ -1611,12 +1616,7 @@ export const kits = [
       }
     ]
   },
-  pullingRobotKit,
-  raceCarKit,
-  recyclingTruckKit,
-  drivingBase1Kit,
-  hopperKit,
-  rhinoKit,
+  ...availableKitModules,
 ];
 
 export const words = {
