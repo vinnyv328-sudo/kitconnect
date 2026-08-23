@@ -1,6 +1,7 @@
 import { ArrowLeft, ChevronRight, Wand2, Lock } from "lucide-react";
 import { words } from "@/lib/kitContent";
 import FlowerThumbnail from "@/components/thumbnails/FlowerThumbnail";
+import helicopterImage from "@/assets/helicopter.png";
 
 const workInProgressImage = "/work-in-progress.svg";
 
@@ -9,7 +10,7 @@ const kitPdfCovers = {
   frog: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/f41e4b630_Screenshot2026-08-04at43518PM.png" },
   milo: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/8147b05c9_MILO.png" },
   flower: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/0fa40d952_Flower.png" },
-  helicopter: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/helicopter-lego.png", fitFill: true },
+  helicopter: { url: workInProgressImage, page: 1, image: helicopterImage, fitFill: true },
   pulling: { url: workInProgressImage, page: 1, image: workInProgressImage },
   racecar: { url: workInProgressImage, page: 1, image: workInProgressImage },
   recyclingtruck: { url: workInProgressImage, page: 1, image: workInProgressImage },
@@ -50,7 +51,7 @@ export default function KitPicker({ language, kits, onChoose, onAICreate, onBack
                 <button key={kit.id} onClick={() => onChoose(kit)} className="group overflow-hidden rounded-[2rem] bg-white text-left shadow-xl transition hover:-translate-y-1">
                   <div className={`relative flex w-full items-center justify-center overflow-hidden bg-white ${cover?.image ? 'aspect-[1306/896]' : 'aspect-[3/4]'}`}>
                     {cover?.image ? (
-                      <img src={cover.image} alt={kit.model[language]} className={`h-full w-full ${cover?.fitFill ? 'object-contain' : 'object-cover'}`} />
+                      <img src={cover.image} alt={kit.model[language]} className={`h-full w-full ${cover?.fitFill ? 'object-contain' : 'object-cover'}`} loading="lazy" />
                     ) : cover ? (
                       <>
                         <iframe
@@ -92,7 +93,7 @@ export default function KitPicker({ language, kits, onChoose, onAICreate, onBack
                 <button key={kit.id} onClick={() => onChoose(kit)} className="group overflow-hidden rounded-[2rem] bg-white text-left shadow-xl transition hover:-translate-y-1">
                   <div className={`relative flex w-full items-center justify-center overflow-hidden bg-white ${cover?.image ? 'aspect-[1306/896]' : 'aspect-[3/4]'}`}>
                     {cover?.image ? (
-                      <img src={cover.image} alt={kit.model[language]} className={`h-full w-full ${cover?.fitFill ? 'object-contain' : 'object-cover'}`} />
+                      <img src={cover.image} alt={kit.model[language]} className={`h-full w-full ${cover?.fitFill ? 'object-contain' : 'object-cover'}`} loading="lazy" />
                     ) : cover ? (
                       <>
                         <iframe
