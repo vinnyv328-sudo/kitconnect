@@ -9,7 +9,7 @@ const kitPdfCovers = {
   frog: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/f41e4b630_Screenshot2026-08-04at43518PM.png" },
   milo: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/8147b05c9_MILO.png" },
   flower: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/0fa40d952_Flower.png" },
-  helicopter: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  helicopter: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/helicopter-lego.png" },
   pulling: { url: workInProgressImage, page: 1, image: workInProgressImage },
   racecar: { url: workInProgressImage, page: 1, image: workInProgressImage },
   recyclingtruck: { url: workInProgressImage, page: 1, image: workInProgressImage },
