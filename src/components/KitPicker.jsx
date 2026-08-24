@@ -11,7 +11,7 @@ const kitPdfCovers = {
   milo: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/8147b05c9_MILO.png" },
   flower: { url: workInProgressImage, page: 1, image: "https://media.base44.com/images/public/6a5d71598673d49d12916a74/0fa40d952_Flower.png" },
   helicopter: { url: workInProgressImage, page: 1, image: helicopterImage, fitFill: true },
-  pulling: { url: workInProgressImage, page: 1, image: workInProgressImage },
+  pulling: { url: "/Pulling.pdf", page: 1, image: undefined },
   racecar: { url: workInProgressImage, page: 1, image: workInProgressImage },
   recyclingtruck: { url: workInProgressImage, page: 1, image: workInProgressImage },
   drivingbase1: { url: workInProgressImage, page: 1, image: workInProgressImage },
@@ -30,7 +30,7 @@ export default function KitPicker({ language, kits, onChoose, onAICreate, onBack
         <h1 className="mb-8 mt-4 text-center text-3xl font-black text-white drop-shadow-lg sm:text-5xl">{t.chooseKit}</h1>
 
         {/* Create with AI — top-level, peer to the sections */}
-        <button onClick={onAICreate} className="group mb-8 flex w-full items-center gap-5 overflow-hidden rounded-[2rem] border-4 border-white/40 bg-white/15 p-6 text-left backdrop-blur-md transition hover:-translate-y-1 hover:bg-white/25">
+        <button onClick={onAICreate} className="group mb-8 flex w-full items-center gap-5 overflow-hidden rounded-[2rem] border-4 border-white/40 bg-white/15 p-6 text-left backdrop-blur-md transition hover:bg-white/25">
           <span className="grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white shadow-lg"><Wand2 size={40} /></span>
           <span className="min-w-0 flex-1">
             <strong className="block text-2xl text-white sm:text-3xl">{t.createMode}</strong>
