@@ -1,20 +1,7 @@
 import { useState } from "react";
 import { Wand2, ArrowLeft, Loader2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import { words } from "@/lib/kitContent";
-
-const buildAiResponse = async (prompt, language) => {
-  const response = await fetch('/api/ai/build', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, language }),
-  });
-
-  if (!response.ok) {
-    throw new Error('AI request failed');
-  }
-
-  return response.json();
-};
 
 export default function AICreator({ language, onStartBuild, onBack }) {
   const t = words[language];
@@ -27,7 +14,51 @@ export default function AICreator({ language, onStartBuild, onBack }) {
     setLoading(true);
     setError("");
     try {
-      const result = await buildAiResponse(prompt, language);
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a LEGO Education build instructor for children ages 6-10. 
+A child describes their LEGO idea: "${prompt}"
+
+Create a complete, fun LEGO build with 6-10 clear steps. Each step adds one type of piece at a time, just like official LEGO manuals.
+
+Respond with JSON only in this exact format:
+{
+  "model": { "en": "English model name", "es": "Spanish model name" },
+  "color": "#hexcolor",
+  "steps": [
+    {
+      "icon": "LayoutGrid",
+      "caption": { "en": "Short English caption", "es": "Short Spanish caption" },
+      "parts": [
+        { "emoji": "🟦", "count": 2, "en": "Piece name in English", "es": "Piece name in Spanish" }
+      ],
+      "attach": [
+        {
+          "x": 50, "y": 50,
+          "en": "Short location label", "es": "Short Spanish label",
+          "detail": {
+            "en": "Precise placement instruction in English",
+            "es": "Precise placement instruction in Spanish"
+          }
+        }
+      ],
+      "help": {
+        "en": "Detailed 2-3 sentence help text in English for a child who is stuck",
+        "es": "Detailed 2-3 sentence help text in Spanish for a child who is stuck"
+      }
+    }
+  ]
+}
+
+Use only standard LEGO pieces (plates, bricks, beams, axles, wheels, slopes). Icon must be one of: LayoutGrid, RectangleHorizontal, Circle, Box, Shapes, Zap, Sparkles, Users, Pin, Minus, Cpu.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            model: { type: "object", properties: { en: { type: "string" }, es: { type: "string" } } },
+            color: { type: "string" },
+            steps: { type: "array" }
+          }
+        }
+      });
 
       const kit = {
         id: "ai-" + Date.now(),

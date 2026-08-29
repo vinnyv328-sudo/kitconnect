@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 
 export default async function(req: Request): Promise<Response> {
   try {
@@ -6,7 +6,10 @@ export default async function(req: Request): Promise<Response> {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const body = await req.json();
+    const text = await req.text();
+    let body;
+    try { body = JSON.parse(text); } catch { return Response.json({ error: 'Invalid JSON body' }, { status: 400 }); }
+
     const { repoName, owner, description = '', private: isPrivate = true, files = [], commitMessage = 'Update from Base44 KitConnect app' } = body;
 
     if (!repoName) return Response.json({ error: 'repoName is required' }, { status: 400 });
@@ -23,33 +26,23 @@ export default async function(req: Request): Promise<Response> {
 
     const fullName = owner ? `${owner}/${repoName}` : repoName;
 
-    // Try to get the existing repo's main branch
     let existingCommitSha: string | null = null;
     let existingTreeSha: string | null = null;
     let repoFullName = fullName;
 
-    const refRes = await fetch(`https://api.github.com/repos/${fullName}/git/refs/heads/main`, {
-      headers: ghHeaders
-    });
+    const refRes = await fetch(`https://api.github.com/repos/${fullName}/git/refs/heads/main`, { headers: ghHeaders });
 
     if (refRes.ok) {
-      // Repo exists — update it
       const refData = await refRes.json();
       existingCommitSha = refData.object.sha;
-
-      // Get the commit's tree SHA
-      const commitRes = await fetch(`https://api.github.com/repos/${fullName}/git/commits/${existingCommitSha}`, {
-        headers: ghHeaders
-      });
+      const commitRes = await fetch(`https://api.github.com/repos/${fullName}/git/commits/${existingCommitSha}`, { headers: ghHeaders });
       if (commitRes.ok) {
         const commitData = await commitRes.json();
         existingTreeSha = commitData.tree.sha;
       }
     } else {
-      // Repo doesn't exist — create it
       const createRes = await fetch('https://api.github.com/user/repos', {
-        method: 'POST',
-        headers: ghHeaders,
+        method: 'POST', headers: ghHeaders,
         body: JSON.stringify({ name: repoName, description, private: isPrivate, auto_init: false })
       });
       if (!createRes.ok) {
@@ -60,12 +53,10 @@ export default async function(req: Request): Promise<Response> {
       repoFullName = repo.full_name;
     }
 
-    // Create blobs for all files
     const treeEntries = [];
     for (const file of files) {
       const blobRes = await fetch(`https://api.github.com/repos/${repoFullName}/git/blobs`, {
-        method: 'POST',
-        headers: ghHeaders,
+        method: 'POST', headers: ghHeaders,
         body: JSON.stringify({ content: file.content, encoding: 'utf-8' })
       });
       if (!blobRes.ok) {
@@ -76,14 +67,11 @@ export default async function(req: Request): Promise<Response> {
       treeEntries.push({ path: file.path, mode: '100644', type: 'blob', sha: blob.sha });
     }
 
-    // Create a tree (use base_tree if updating existing repo to preserve other files)
     const treeBody: Record<string, unknown> = { tree: treeEntries };
     if (existingTreeSha) treeBody.base_tree = existingTreeSha;
 
     const treeRes = await fetch(`https://api.github.com/repos/${repoFullName}/git/trees`, {
-      method: 'POST',
-      headers: ghHeaders,
-      body: JSON.stringify(treeBody)
+      method: 'POST', headers: ghHeaders, body: JSON.stringify(treeBody)
     });
     if (!treeRes.ok) {
       const err = await treeRes.json();
@@ -91,17 +79,13 @@ export default async function(req: Request): Promise<Response> {
     }
     const tree = await treeRes.json();
 
-    // Create the commit
     const commitBody: Record<string, unknown> = {
-      message: commitMessage,
-      tree: tree.sha,
+      message: commitMessage, tree: tree.sha,
       parents: existingCommitSha ? [existingCommitSha] : []
     };
 
     const commitRes = await fetch(`https://api.github.com/repos/${repoFullName}/git/commits`, {
-      method: 'POST',
-      headers: ghHeaders,
-      body: JSON.stringify(commitBody)
+      method: 'POST', headers: ghHeaders, body: JSON.stringify(commitBody)
     });
     if (!commitRes.ok) {
       const err = await commitRes.json();
@@ -109,7 +93,6 @@ export default async function(req: Request): Promise<Response> {
     }
     const commit = await commitRes.json();
 
-    // Create or update the main branch ref
     const refMethod = existingCommitSha ? 'PATCH' : 'POST';
     const refUrl = existingCommitSha
       ? `https://api.github.com/repos/${repoFullName}/git/refs/heads/main`
@@ -118,11 +101,7 @@ export default async function(req: Request): Promise<Response> {
       ? { sha: commit.sha }
       : { ref: 'refs/heads/main', sha: commit.sha };
 
-    const refUpdateRes = await fetch(refUrl, {
-      method: refMethod,
-      headers: ghHeaders,
-      body: JSON.stringify(refBody)
-    });
+    const refUpdateRes = await fetch(refUrl, { method: refMethod, headers: ghHeaders, body: JSON.stringify(refBody) });
     if (!refUpdateRes.ok) {
       const err = await refUpdateRes.json();
       return Response.json({ error: `Failed to update branch ref: ${err.message}` }, { status: refUpdateRes.status });
